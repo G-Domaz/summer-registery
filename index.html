@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>استعلام مواد الطالب</title>
+  <style>
+    body {
+      font-family: 'Cairo', sans-serif;
+      background: url("institute.jpg") no-repeat center center fixed;
+      background-size: cover;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      min-height: 100vh;
+    }
+
+    /* تظليل الخلفية */
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background: rgba(255,255,255,0.85);
+      z-index: 0;
+    }
+
+    .overlay {
+      position: relative;
+      z-index: 1;
+      background: rgba(255, 255, 255, 0.95);
+      padding: 30px;
+      border-radius: 15px;
+      width: 100%;
+      max-width: 900px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.1);
+      margin: 20px;
+    }
+
+    h2 {
+      color: #2e7d32;
+      margin-bottom: 20px;
+      font-size: clamp(20px, 4vw, 26px);
+      text-align: center;
+    }
+
+    input[type="text"] {
+      display: block; /* يجعله يأخذ سطر كامل */
+      margin: 0 auto 20px auto; /* وسط أفقيًا مع مسافة أسفل */
+      padding: 12px 40px 12px 12px;
+      font-size: 1rem;
+      width: 75%;
+      border: 2px solid #ccc;
+      border-radius: 50px;
+      background: #fff url('data:image/svg+xml;utf8,<svg fill="%23999" height="18" viewBox="0 0 24 24" width="18" xmlns="http://www.w3.org/2000/svg"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0016 9.5 6.5 6.5 0 109.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C8.01 14 6 11.99 6 9.5S8.01 5 10.5 5 15 7.01 15 9.5 12.99 14 10.5 14z"/></svg>') no-repeat 10px center;
+      background-size: 20px;
+      margin-bottom: 15px;
+    }
+
+    .btn-green,
+    .btn-white-blue,
+    #submitBtn {
+      padding: 10px 20px;
+      font-size: clamp(18px, 3vw, 22px);
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    .btn-green {
+      background-color: green;
+      color: white;
+    }
+    .btn-green:hover {
+      background-color: white;
+      color: green;
+      border: 2px solid green;
+    }
+    .btn-white-blue {
+      background-color: white;
+      color: blue;
+      border: 2px solid blue;
+    }
+    .btn-white-blue:hover {
+      background-color: blue;
+      color: white;
+    }
+    #submitBtn {
+      background: linear-gradient(45deg, #28a745, #218838);
+      color: white;
+      border-radius: 50px;
+      box-shadow: 0 4px 15px rgba(0, 128, 0, 0.4);
+    }
+
+    .notice-box {
+      background: #fff8e1;
+      border: 2px solid #ffca28;
+      border-radius: 12px;
+      padding: 15px;
+      margin-bottom: 20px;
+      font-size: clamp(14px, 3vw, 16px);
+    }
+
+    .subjects, .info-box {
+      margin-top: 20px;
+      text-align: right;
+      font-size: clamp(14px, 3vw, 16px);
+    }
+
+    .subject {
+      background-color: #e0f2f1;
+      padding: 12px;
+      margin-bottom: 10px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+    }
+
+     .subject label {
+          cursor: pointer;
+          flex-grow: 1;
+        }
+
+    .subject:hover {
+      background-color: #b2dfdb;
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 20px;
+      padding: 10px;
+      background-color: #263238;
+      color: white;
+      font-size: clamp(12px, 3vw, 14px);
+      border-radius: 10px;
+    }
+
+    /* 📱 للشاشات الصغيرة */
+    @media (max-width: 600px) {
+      .overlay {
+        padding: 20px;
+        margin: 10px;
+      }
+      .btn-green, .btn-white-blue, #submitBtn {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="overlay">
+    <h2>تسجيل مواد الفصل الصيفي</h2>
+
+    <div class="notice-box">
+      <h3>تعليمات هامة للطلاب</h3>
+     <ul>
+        <li> هذه الشاشة خاصة بطلاب <strong>المستوى الأول</strong> اللذين لديهم مواد رسوب، ويرغبون في إجتيازها في <strong>الفصل الصيفي</strong>.</li>
+        <li> يرجى إدخال الرقم القومي <strong>باللغة الإنجليزية</strong>.</li>
+        <li> ينبغي متابعة التعليمات على صفحة المعهد بأستمرار لمعرفة <strong>رسوم المواد</strong> وجداول الامتحان وخلافه.</li>
+        <li> في حالة الرغبة في تعديل رقم الهاتف أو أي بيانات للطالب، يرجى مراجعة <strong>قسم شئون الطلاب</strong>.</li>
+      </ul>
+    </div>
+
+    <input type="text" id="nationalId" placeholder="أدخل الرقم القومي للطالب" onkeypress="handleKeyPress(event)" />
+
+    <div style="display:flex; gap:10px; flex-wrap:wrap; margin-bottom:15px;">
+      <button class="btn-green" onclick="getSubjects()">عرض المواد</button>
+      <button class="btn-white-blue" onclick="toggleSchedule()">عرض جدول المحاضرات</button>
+    </div>
+
+    <div id="studentInfo"></div>
+    <div id="resultSubjects" class="subjects"></div>
+
+    <div id="warningMessage" style="display:none; color:red; background:#fff5f5; font-weight:bold; font-size:18px; margin:15px 0; padding:10px; text-align:center; border:2px dashed #b30000; border-radius:10px;">
+      يرجى اختيار المقررات أولاً.
+    </div>
+
+    <button id="submitBtn" onclick="submitSelectedSubjects()" style="display:none;">تسجيل المواد المختارة</button>
+
+    <p id="responseMsg"></p>
+    <button id="newStudentBtn" style="display:none;" onclick="resetForm()">استعلام عن طالب جديد</button>
+
+    <div id="scheduleContainer" style="display:none; max-width:100%; margin-top:20px;">
+      <img src="summer-2025.jpg" alt="جدول المحاضرات" style="width:100%; height:auto; border-radius:10px;">
+    </div>
+
+    <footer>جميع الحقوق محفوظة © المعهد العالي للسياحة والفنادق بالغردقة 2025</footer>
+  </div>
+
+  <script>
+    const getScriptURL = "https://script.google.com/macros/s/AKfycbzjJDX1Ut7J8tavV_Ob1Kv2heL8dNEWLS5aC_wz9V8NsZelLEx_9vmCgUJ39APssPHuxA/exec";
+    const sendScriptURL = getScriptURL;
+    let currentStudent = {};
+
+    function handleKeyPress(event) {
+      if (event.key === "Enter") {
+        getSubjects();
+      }
+    }
+
+    function showLoadingMessage() {
+      const resultDiv = document.getElementById("resultSubjects");
+      let dots = 0;
+      resultDiv.innerHTML = `<p style="color:#ff5722;font-weight:bold;">⏳ انتظر... جاري التحميل<span id="loadingDots"></span></p>`;
+      return setInterval(() => {
+        dots = (dots + 1) % 6; 
+        document.getElementById("loadingDots").textContent = ".".repeat(dots);
+      }, 500);
+    }
+
+    async function getSubjects() {
+      const nationalId = document.getElementById("nationalId").value.trim();
+      const resultDiv = document.getElementById("resultSubjects");
+      const infoDiv = document.getElementById("studentInfo");
+      const responseMsg = document.getElementById("responseMsg");
+       const newBtn = document.getElementById("newStudentBtn"); // حذف
+      const submitBtn = document.getElementById("submitBtn");
+
+      responseMsg.textContent = "";
+      newBtn.style.display = "none";
+      infoDiv.innerHTML = "";
+
+      if (!nationalId) {
+        resultDiv.innerHTML = "<p style='color:red;'>من فضلك أدخل الرقم القومي للطالب.</p>";
+        return;
+      }
+
+      const loadingInterval = showLoadingMessage();
+      try {
+        const response = await fetch(`${getScriptURL}?national=${nationalId}`);
+        const data = await response.json();
+        clearInterval(loadingInterval);
+
+        if (data.error) {
+          resultDiv.innerHTML = `<p style='color:red;'>${data.error}</p>`;
+          return;
+        }
+
+        currentStudent = {
+      name: data.name,
+      seat: data.seat,
+      code: data.code,
+      national: data.national,
+      phone: data.phone,
+      advisor: data.advisor,
+      lang1: data.lang1,
+      lang2: data.lang2
+    };
+
+        infoDiv.innerHTML = `
+          <div class="info-box">
+            <strong>الاسم:</strong> ${data.name}<br>
+            <strong>رقم الجلوس:</strong> ${data.seat} &nbsp;&nbsp; <strong>كود الطالب:</strong> ${data.code}<br>
+            <strong>المرشد الأكاديمي:</strong> ${data.advisor}<br>
+            <strong>اللغة 1:</strong> ${data.lang1} | <strong>اللغة 2:</strong> ${data.lang2}
+          </div>
+        `;
+
+if (data.registeredBefore) {  
+     resultDiv.innerHTML = "<p class='loading'> لقد قمت بتسجيل المواد بالفعل ولا يمكنك التعديل الا من خلال التوجه الى مكتب الشئون.</p>";
+     return;
+   }
+
+        resultDiv.innerHTML = `<p style="color: #004d40; font-weight: bold;">عدد المواد: ${data.subjects.length}</p>`;
+        data.subjects.forEach((subject, index) => {
+          const div = document.createElement("div");
+      div.className = "subject";
+      div.innerHTML = `
+        <input type="checkbox" id="subject${index}" name="subjects" value="${subject}">
+        <label for="subject${index}">${subject}</label>
+      `;
+      resultDiv.appendChild(div);
+    });
+
+        submitBtn.style.display = "inline-block";
+
+    document.querySelectorAll('input[name="subjects"]').forEach(cb => {
+      cb.addEventListener('change', () => {
+        const selectedCount = document.querySelectorAll('input[name="subjects"]:checked').length;
+        if (selectedCount > 4) {
+          cb.checked = false;
+          alert("يمكنك اختيار 4 مواد فقط كحد أقصى.");
+        }
+      });
+    });
+        } catch (error) {
+    clearInterval(loadingInterval); // 🛑 لازم توقف حتى في حالة الخطأ
+    console.error("خطأ في جلب البيانات:", error);
+    resultDiv.innerHTML = "<p class='loading'>حدث خطأ أثناء جلب البيانات.</p>";
+  }
+
+    }
+
+    async function submitSelectedSubjects() {
+  const selected = Array.from(document.querySelectorAll('input[name="subjects"]:checked'))
+                        .map(el => el.value);
+  
+  const warning = document.getElementById("warningMessage");
+
+  if (selected.length === 0) {
+    // عرض الرسالة في الصفحة
+    warning.style.display = "block";
+    return; // منع الاستكمال
+  }
+      // إخفاء الرسالة لو كان فيه اختيار
+  warning.style.display = "none";
+
+  const responseMsg = document.getElementById("responseMsg");
+  let dots = 0;
+  responseMsg.innerHTML = `⏳ انتظر... جاري تسجيل المواد<span id="loadingDotsSubmit"></span>`;
+
+  const loadingInterval = setInterval(() => {
+    dots = (dots + 1) % 4;
+    document.getElementById("loadingDotsSubmit").textContent = ".".repeat(dots);
+  }, 500);
+
+  const formData = new FormData();
+  formData.append("code", currentStudent.code);
+  formData.append("seat", currentStudent.seat);
+  formData.append("name", currentStudent.name);
+  formData.append("national", currentStudent.national);
+  formData.append("phone", currentStudent.phone);
+  formData.append("advisor", currentStudent.advisor);
+  formData.append("subjects", selected.join("|"));
+
+      try {
+    const res = await fetch(sendScriptURL, {
+      method: "POST",
+      body: formData
+    });
+
+    const text = await res.text();
+    clearInterval(loadingInterval); // 🛑 وقف النقاط
+
+    if (text.includes("تم")) {
+      responseMsg.textContent = "✅ تم تسجيل مواد الترم الصيفي بنجاح!";
+
+      // إخفاء معلومات الطالب والمواد
+      document.getElementById("studentInfo").innerHTML = "";
+      document.getElementById("resultSubjects").innerHTML = "";
+
+      // مسح الرقم القومي
+      document.getElementById("nationalId").value = "";
+
+      // إخفاء زر الترحيل وزر الطالب الجديد
+      document.getElementById("submitBtn").style.display = "none";
+      document.getElementById("newStudentBtn").style.display = "none";
+    } else {
+      responseMsg.textContent = `⚠️ فشل الترحيل: ${text}`;
+    }
+      } catch (err) {
+       clearInterval(loadingInterval);
+        console.error("خطأ أثناء الإرسال:", err);
+        document.getElementById("responseMsg").textContent = "خطأ أثناء الإرسال.";
+      }
+    }
+
+    function resetForm() {
+      document.getElementById("studentInfo").innerHTML = "";
+      document.getElementById("resultSubjects").innerHTML = "";
+      document.getElementById("responseMsg").textContent = "";
+      document.getElementById("nationalId").value = "";
+      document.getElementById("newStudentBtn").style.display = "none";
+      currentStudent = {};
+    }
+
+    function toggleSchedule() {
+      const container = document.getElementById("scheduleContainer");
+      container.style.display = (container.style.display === "none" || container.style.display === "") ? "block" : "none";
+    }
+  </script>
+</body>
+</html>
